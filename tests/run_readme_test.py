@@ -1,10 +1,3 @@
-# qt_multiprocessing
-
-Long running process that runs along side of the Qt event loop and allows other widgets to live in the other process.
-
-## Quick Start
-
-```python
 import os
 import qt_multiprocessing
 
@@ -23,7 +16,7 @@ class MyPIDLabelProxy(qt_multiprocessing.WidgetProxy):
     GETTERS = ['text']
 
 
-if __name__ == '__main__':
+def run_app():
     with qt_multiprocessing.MpApplication() as app:
         print("Main PID:", os.getpid())
 
@@ -52,22 +45,6 @@ if __name__ == '__main__':
         btn.clicked.connect(set_text)
 
         widg.show()
-```
-
-Below is an example for if you want to manually create widgets in a different process without the proxy.
-
-```python
-import os
-import qt_multiprocessing
-
-from qtpy import QtWidgets
-
-
-class MyPIDLabel(QtWidgets.QLabel):
-    def print_pid(self):
-        text = self.text()
-        print(text, 'PID:', os.getpid())
-        return text
 
 
 def create_process_widgets():
@@ -76,7 +53,7 @@ def create_process_widgets():
     return {'label': lbl}
 
 
-if __name__ == '__main__':
+def run_without_proxy():
     with qt_multiprocessing.MpApplication(initialize_process=create_process_widgets) as app:
         print("Main PID:", os.getpid())
 
@@ -102,46 +79,9 @@ if __name__ == '__main__':
         btn.clicked.connect(set_text)
 
         widg.show()
-```
-
-## How it works
-
-This library works by creating an event loop in a separate process while the Qt application is running in the main 
-process. This library is built off of the mp_event_loop library which creates a long running process where events are
-thrown on a queue and executed in a separate process. The other process that is created also runs it's own Qt 
-application while executing events in a timer.
-
-This library has the ability to:
-  * dynamic creation of widgets in a separate process
-  * Run methods of widgets in a separate process through variable names
-  * Proxy widgets
-  
-
-## Manual Example
-
-This example shows how everything comes together manually
-
-```python
-import os
-import qt_multiprocessing
-
-from qtpy import QtWidgets
 
 
-class MyPIDLabel(QtWidgets.QLabel):
-    def print_pid(self):
-        text = self.text()
-        print(text, 'PID:', os.getpid())
-        return text
-
-
-def create_process_widgets():
-    lbl = MyPIDLabel('Hello')
-    lbl.show()
-    return {'label': lbl}
-
-
-if __name__ == '__main__':
+def run_manual():
     app = QtWidgets.QApplication([])
     mp_loop = qt_multiprocessing.AppEventLoop(initialize_process=create_process_widgets)
     print("Main PID:", os.getpid())
@@ -177,4 +117,9 @@ if __name__ == '__main__':
 
     # Quit the multiprocessing event loop when the app closes
     mp_loop.close()
-```
+
+
+if __name__ == '__main__':
+    # run_app()
+    # run_without_proxy()
+    run_manual()
