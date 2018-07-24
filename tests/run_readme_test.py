@@ -120,6 +120,6 @@ def run_manual():
 
 
 if __name__ == '__main__':
-    # run_app()
+    run_app()
     # run_without_proxy()
-    run_manual()
+    # run_manual()

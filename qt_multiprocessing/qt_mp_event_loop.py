@@ -1,27 +1,12 @@
-import time
-import atexit
-import threading
 from queue import Empty
 from qtpy import QtWidgets, QtCore
 
-from mp_event_loop import Event, CacheEvent, mark_task_done, process_event, run_event_loop as main_event_loop, EventLoop
+from mp_event_loop import Event, CacheEvent, mark_task_done, process_event, EventLoop
 
 from .events import VarEvent, SaveVarEvent
 
 
-__all__ = ['run_qt_event_loop', 'QtEventQueueManager', 'AppEventLoop']
-
-
-def run_qt_event_loop(alive_event, event_queue, consumer_queue, app=None):
-    """Wait for the app to execute. Run the event loop. Quit the app when complete."""
-    time.sleep(0.01)
-    main_event_loop(alive_event, event_queue, consumer_queue)
-
-    if app:
-        try:
-            app.quit()
-        except (AttributeError, RuntimeError):
-            pass
+__all__ = ['QtEventQueueManager', 'AppEventLoop']
 
 
 class QtEventQueueManager(object):
@@ -30,10 +15,11 @@ class QtEventQueueManager(object):
     Note:
         A thread does not allow widgets to be created and causes possible thread safety issues.
     """
-    def __init__(self, alive_event, event_queue, consumer_queue=None):
+    def __init__(self, alive_event, event_queue, consumer_queue=None, app=None):
         self.alive_event = alive_event
         self.event_queue = event_queue
         self.consumer_queue = consumer_queue
+        self.app = app
 
         self.event_mngr = QtCore.QTimer()
         self.event_mngr.setInterval(0)  # Run when Qt event loop is idle (This may consume too much processing
@@ -47,6 +33,11 @@ class QtEventQueueManager(object):
                 process_event(event, consumer_queue=self.consumer_queue)
                 mark_task_done(self.event_queue)
             except Empty:
+                pass
+        elif self.app:
+            try:
+                self.app.quit()
+            except (AttributeError, RuntimeError):
                 pass
 
     def start(self):
@@ -192,7 +183,7 @@ class AppEventLoop(EventLoop):
         # Start the system to process events (Note threads cannot create widgets).
         # event_mngr = threading.Thread(target=run_qt_event_loop, args=(alive_event, event_queue, consumer_queue, app))
         # event_mngr.start()
-        event_mngr = QtEventQueueManager(alive_event, event_queue, consumer_queue)
+        event_mngr = QtEventQueueManager(alive_event, event_queue, consumer_queue, app)
         event_mngr.start()
 
         # Run the application
