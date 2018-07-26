@@ -1,7 +1,4 @@
 import os
-from mp_event_loop import CacheEvent, process_event, mark_task_done
-from queue import Empty
-
 import qt_multiprocessing
 from qtpy import QtWidgets, QtCore
 
@@ -30,10 +27,10 @@ if __name__ == '__main__':
 
         # Form
         inp = QtWidgets.QLineEdit()
-        btn = QtWidgets.QPushButton('Set Text')
+        btn = QtWidgets.QPushButton('Create Label')
         lay.addRow(inp, btn)
 
-        def set_text():
+        def create_label():
             # Create a new label in a different process every time Set Text is clicked.
             text = inp.text()
             lbl = LabelProxy(text)
@@ -45,7 +42,7 @@ if __name__ == '__main__':
 
             lbls.append(lbl)  # Make sure it doesn't die? It may still not die due to dictionary cache
 
-        btn.clicked.connect(set_text)
+        btn.clicked.connect(create_label)
 
         # ===== Button to show label texts =====
         get_text_btn = QtWidgets.QPushButton('Get Labels')

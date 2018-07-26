@@ -160,7 +160,7 @@ class AppEventLoop(EventLoop):
         self.event_process = self.event_loop_class(name="AppEventLoop-" + self.name, target=self.run_event_loop,
                                                    args=(self.alive_event, self.event_queue, self.consumer_queue),
                                                    kwargs={'initialize_process': self.initialize_process})
-        self.event_process.daemon = False
+        self.event_process.daemon = True
         self.event_process.start()
 
     @staticmethod
