@@ -99,7 +99,7 @@ class MpApplication(QtWidgets.QApplication):
             kwargs (dict)[None]: Keyword kwargs argument.
         """
         self.__loop__.add_event(target, *args, has_output=has_output, event_key=event_key,
-                               cache=cache, re_register=re_register, **kwargs)
+                                cache=cache, re_register=re_register, **kwargs)
 
         if not self.__loop__.is_running():
             self.__loop__.start()
@@ -118,7 +118,7 @@ class MpApplication(QtWidgets.QApplication):
             kwargs (dict)[None]: Keyword kwargs argument.
         """
         self.__loop__.add_cache_event(target, *args, has_output=has_output, event_key=event_key,
-                                     re_register=re_register, **kwargs)
+                                      re_register=re_register, **kwargs)
 
         if not self.__loop__.is_running():
             self.__loop__.start()

@@ -11,7 +11,7 @@ def make_widgets():
 
 
 if __name__ == '__main__':
-    with qt_multiprocessing.AppEventLoop(make_widgets) as loop:
+    with qt_multiprocessing.AppEventLoop(initialize_process=make_widgets) as loop:
         app = QtWidgets.QApplication([])
 
         widg = QtWidgets.QDialog()
