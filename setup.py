@@ -32,11 +32,11 @@ if __name__ == "__main__":
 
     setup(
         name="qt_multiprocessing",
-        version="0.0.4",
+        version="0.0.5",
         description="Library to have other PySide/PyQt widgets run in a separate process while allowing "
                     "communication with the main process.",
         url="https://github.com/justengel/qt_multiprocessing",
-        download_url="https://github.com/justengel/qt_multiprocessing/archive/v0.0.4.tar.gz",
+        download_url="https://github.com/justengel/qt_multiprocessing/archive/v0.0.5.tar.gz",
 
         keywords=['qt multiprocessing', "multiprocessing", "event", "loop", "event loop", "process"],
 
