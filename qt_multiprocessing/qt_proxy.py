@@ -10,7 +10,7 @@ class WidgetProxy(mp_event_loop.Proxy):
     PROXY_CLASS = None
     SHOW_WIDGET = True
 
-    def create_mp_object(self, args, kwargs):
+    def create_mp_object(self, *args, **kwargs):
         obj = self.PROXY_CLASS(*args, **kwargs)
         if self.SHOW_WIDGET:
             try:
