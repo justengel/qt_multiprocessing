@@ -4,9 +4,17 @@ from qtpy import QtWidgets, QtCore
 
 
 class MyPIDLabel(QtWidgets.QLabel):
+    def __init__(self, text='', parent=None):
+        text = str(text) + ' PID:' + str(os.getpid())
+        super().__init__(text, parent=parent)
+
+    def setText(self, text):
+        text = str(text) + ' PID:' + str(os.getpid())
+        super().setText(text)
+
     def print_pid(self):
         text = self.text()
-        print(text, 'PID:', os.getpid())
+        print(text)
         return text
 
 
@@ -38,7 +46,7 @@ if __name__ == '__main__':
 
             # Try to somewhat prove that the label is in a different process.
             # Not exposed (will call in other process. This will be None)
-            print('Set Label text', text + '. Label text in this process', lbl.print_pid())
+            print('Set Label text', text + '. Label text in this process', lbl.text())
 
             lbls.append(lbl)  # Make sure it doesn't die? It may still not die due to dictionary cache
 

@@ -1,3 +1,4 @@
+"""Manually create a Qt application and a multiprocessing event loop."""
 import time
 
 import qt_multiprocessing

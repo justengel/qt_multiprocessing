@@ -1,5 +1,7 @@
 """
 Test trying to get multiprocessing managers to work with Qt.
+
+There doesn't seem to be a good way of proxying Qt with Managers.
 """
 import multiprocessing as mp
 import multiprocessing.managers as manage
@@ -9,6 +11,7 @@ import mp_event_loop
 from qtpy import QtWidgets
 
 import qt_multiprocessing
+
 
 class QtManager(manage.BaseManager):
     pass

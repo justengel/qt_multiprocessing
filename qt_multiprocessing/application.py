@@ -18,22 +18,21 @@ class MpApplication(QtWidgets.QApplication):
             return super().__new__(cls, *args, **kwargs)
         return app
 
-    def __init__(self, *args, initialize_process=None, **kwargs):
+    def __init__(self, *args, initialize_process=None, output_handlers=None, **kwargs):
         """Instantiate the application."""
         if len(args) == 0 and len(kwargs) == 0:
             args = ([],)
 
         # Set the base proxy multiprocessing event loop
         if not hasattr(self, '__loop__'):
-            self.__loop__ = AppEventLoop(initialize_process=initialize_process)
+            self.__loop__ = AppEventLoop(initialize_process=initialize_process, output_handlers=output_handlers)
             WidgetProxy.__loop__ = self.__loop__
 
         super().__init__(*args, **kwargs)
 
     def __enter__(self):
         """Enter the context manager (with statement)."""
-        if not self.__loop__.is_running():
-            self.__loop__.start()
+        self.__loop__.__enter__()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -42,8 +41,7 @@ class MpApplication(QtWidgets.QApplication):
             self.exec_()
 
             # Finish executing the multiprocessing event loop
-            self.__loop__.wait()
-            self.__loop__.stop()
+            self.__loop__.__exit__(exc_type, exc_val, exc_tb)
 
             return True
         return False
